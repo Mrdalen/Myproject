@@ -13,9 +13,9 @@ import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
 
 // 把axios挂载到vue实例对象的属性里
+Vue.prototype.$http = axios
 Vue.use(ElementUi)
 
-Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

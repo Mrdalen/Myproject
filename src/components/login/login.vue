@@ -18,7 +18,13 @@
           <el-input type="password" v-model="userObj.password"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" class="myloginbtn" round @click.prevent="login">登陆</el-button>
+          <el-button
+            type="primary"
+            class="myloginbtn"
+            round
+            @click.prevent="login"
+            v-loading.fullscreen.lock="fullscreenLoading"
+          >登陆</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -33,6 +39,7 @@ export default {
         password: "",
         username: ""
       },
+      // 判断的条件
       rules: {
         username: [
           { required: true, message: "请输入用户名", trigger: "blur" },
@@ -42,7 +49,8 @@ export default {
           { required: true, message: "请输入密码", trigger: "blur" },
           { min: 6, max: 16, message: "请输入正确密码", trigger: "blur" }
         ]
-      }
+      },
+      fullscreenLoading: false
     };
   },
   methods: {
@@ -62,22 +70,34 @@ export default {
             let { data, meta } = res.data;
             // 如果登陆成功
             if (meta.status === 200) {
-              // 提示信息
-              this.$message({
-                message: meta.msg,
-                type: "success"
-              });
-              // 跳转路由
-              this.$router.push("/home");
-              // 把token存到浏览器中
-              window.localStorage.setItem("token", data.token);
+              // Loding加载
+              this.fullscreenLoading = true;
+              // Lodin加载后执行的回调函数
+              setTimeout(() => {
+                this.fullscreenLoading = false;
+                // 提示信息
+                this.$message({
+                  message: meta.msg,
+                  type: "success"
+                });
+                // 跳转路由
+                this.$router.push("/");
+                // 把token存到浏览器中
+                window.localStorage.setItem("token", data.token);
+              }, 500);
               // 登陆失败
             } else {
-              // 提示信息
-              this.$message({
-                message: meta.msg,
-                type: "warning"
-              });
+              // Lodin加载
+              this.fullscreenLoading = true;
+              // Lodin加载后执行的回调函数
+              setTimeout(() => {
+                this.fullscreenLoading = false;
+                // 提示信息
+                this.$message({
+                  message: meta.msg,
+                  type: "warning"
+                });
+              }, 400);
             }
           });
         }
