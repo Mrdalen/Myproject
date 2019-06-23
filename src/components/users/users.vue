@@ -137,13 +137,14 @@
         </el-form-item>
         <el-form-item label="请选择角色" :label-width="formLabelWidth">
           <!-- 角色选项 -->
-          <el-select v-model="allot.role" placeholder>
-            <el-option label="请选择角色" value="-1" disabled></el-option>
-            <el-option label="主管" value="30"></el-option>
-            <el-option label="测试角色" value="31"></el-option>
-            <el-option label="测试角色2" value="34"></el-option>
-            <el-option label="超级管理员" value="39"></el-option>
-            <el-option label="test" value="40"></el-option>
+          <el-select v-model="allot.rid" placeholder="请选择">
+            <el-option label="请选择" :value="-1"></el-option>
+            <el-option
+              v-for="item in selDataList"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -198,9 +199,11 @@ export default {
       // 角色分配弹框内容数据
       allot: {
         username: "",
-        role: "请选择角色",
-        id: 0
+        id: "",
+        rid: ""
       },
+      // 下拉框数据源
+      selDataList: [],
       // Lodin加载
       fullscreenLoading: false
     };
@@ -434,30 +437,23 @@ export default {
         headers: { Authorization: token }
       }).then(res => {
         // 把用户名和角色还有id赋值过去
-        let { data } = res.data;
-        this.allot.id = data.id;
-        this.allot.username = data.username;
-        switch (data.rid) {
-          case -1:
-            this.allot.role = "请选择角色";
-            break;
-          case 30:
-            this.allot.role = "主管";
-            break;
-          case 31:
-            this.allot.role = "测试角色";
-            break;
-          case 34:
-            this.allot.role = "测试角色2";
-            break;
-          case 39:
-            this.allot.role = "超级管理员";
-            break;
-          case 40:
-            this.allot.role = "test";
-            break;
-          default:
-            this.allot.role = "请选择角色";
+        let { data, meta } = res.data;
+        if (meta.status == 200) {
+          this.allot.id = data.id;
+          this.allot.username = data.username;
+          this.allot.rid = data.rid;
+          // 调用接口获取下拉框角色数据列表
+          this.$http({
+            method: "GET",
+            url: "http://localhost:8888/api/private/v1/roles",
+            headers: { Authorization: token }
+          }).then(res => {
+            if (res.data.meta.status == 200) {
+              // 赋值给下拉框列表
+              this.selDataList = res.data.data;
+              // console.log(this.selDataList);
+            }
+          });
         }
       });
     },
@@ -465,37 +461,21 @@ export default {
     Alloat(id) {
       // 获取token值
       let token = window.localStorage.getItem("token");
-      // 如果用户没有修改
-      if (
-        this.allot.role == "请选择角色" ||
-        this.allot.role == "主管" ||
-        this.allot.role == "测试角色" ||
-        this.allot.role == "测试角色2" ||
-        this.allot.role == "超级管理员" ||
-        this.allot.role == "test"
-      ) {
-        // 提示没有选择修改
-        // this.allotDialog = false;
+      // 调用接口
+      this.$http({
+        method: "PUT",
+        url: `http://localhost:8888/api/private/v1/users/${id}/role`,
+        data: { rid: this.allot.rid },
+        // 请求头发送token
+        headers: { Authorization: token }
+      }).then(res => {
+        // console.log(res);
+        this.allotDialog = false;
         this.$message({
-          message: "您没有修改角色哦"
+          message: res.data.meta.msg,
+          type: "success"
         });
-      } else {
-        // 调用接口
-        this.$http({
-          method: "PUT",
-          url: `http://localhost:8888/api/private/v1/users/${id}/role`,
-          data: { rid: this.allot.role },
-          // 请求头发送token
-          headers: { Authorization: token }
-        }).then(res => {
-          // console.log(res);
-          this.allotDialog = false;
-          this.$message({
-            message: res.data.meta.msg,
-            type: "success"
-          });
-        });
-      }
+      });
     }
   },
   mounted() {
