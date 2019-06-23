@@ -216,11 +216,10 @@ export default {
       // 调用接口
       this.$http({
         method: "GET",
-        url: `http://localhost:8888/api/private/v1/users?query=${
-          this.query
-        }&pagenum=${this.pagenum}&pagesize=${this.pagesize}`,
+        url: `users?query=${this.query}&pagenum=${this.pagenum}&pagesize=${
+          this.pagesize
+        }`
         // 请求头token
-        headers: { Authorization: token }
       }).then(res => {
         // console.log(res);
         let { data, meta } = res.data;
@@ -278,10 +277,9 @@ export default {
       let token = window.localStorage.getItem("token");
       this.$http({
         method: "POST",
-        url: "http://localhost:8888/api/private/v1/users",
-        data: this.form,
+        url: "users",
+        data: this.form
         // 请求头
-        headers: { Authorization: token }
       }).then(res => {
         // console.log(res);
         // 如果新增成功
@@ -316,8 +314,7 @@ export default {
       this.editDialog = true;
       this.$http({
         method: "GET",
-        url: `http://localhost:8888/api/private/v1/users/${id}`,
-        headers: { Authorization: token }
+        url: `users/${id}`
       }).then(res => {
         let { meta, data } = res.data;
         if (meta.status == 200) {
@@ -335,14 +332,13 @@ export default {
       // 调用接口
       this.$http({
         method: "PUT",
-        url: `http://localhost:8888/api/private/v1/users/${form.id}`,
+        url: `users/${form.id}`,
         // 修改后的数据
         data: {
           email: form.email,
           mobile: form.mobile
-        },
+        }
         // 请求头中放入token值
-        headers: { Authorization: token }
       }).then(res => {
         // console.log(res);
         if (res.data.meta.status == 200) {
@@ -370,7 +366,7 @@ export default {
           // 调用接口
           this.$http({
             method: "DELETE",
-            url: `http://localhost:8888/api/private/v1/users/${id}`,
+            url: `users/${id}`,
             // 请求头中发送token
             headers: {
               Authorization: token
@@ -411,10 +407,7 @@ export default {
       // 调用接口设置用户状态
       this.$http({
         method: "PUT",
-        url: `http://localhost:8888/api/private/v1/users/${stobj.id}/state/${
-          stobj.mg_state
-        }`,
-        headers: { Authorization: token }
+        url: `users/${stobj.id}/state/${stobj.mg_state}`
       }).then(res => {
         this.$message({
           message: "修改状态成功",
@@ -432,9 +425,8 @@ export default {
       // 根据id获取数据
       this.$http({
         method: "GET",
-        url: `http://localhost:8888/api/private/v1/users/${alloatObj.id}`,
+        url: `users/${alloatObj.id}`
         // 请求头发送token值
-        headers: { Authorization: token }
       }).then(res => {
         // 把用户名和角色还有id赋值过去
         let { data, meta } = res.data;
@@ -445,8 +437,7 @@ export default {
           // 调用接口获取下拉框角色数据列表
           this.$http({
             method: "GET",
-            url: "http://localhost:8888/api/private/v1/roles",
-            headers: { Authorization: token }
+            url: "roles"
           }).then(res => {
             if (res.data.meta.status == 200) {
               // 赋值给下拉框列表
@@ -464,10 +455,9 @@ export default {
       // 调用接口
       this.$http({
         method: "PUT",
-        url: `http://localhost:8888/api/private/v1/users/${id}/role`,
-        data: { rid: this.allot.rid },
+        url: `users/${id}/role`,
+        data: { rid: this.allot.rid }
         // 请求头发送token
-        headers: { Authorization: token }
       }).then(res => {
         // console.log(res);
         this.allotDialog = false;

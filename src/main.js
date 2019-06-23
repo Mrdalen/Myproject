@@ -9,11 +9,13 @@ import router from './router'
 import ElementUi from 'element-ui'
 // 引入样式饿了吗
 import 'element-ui/lib/theme-chalk/index.css'
-// 引入axiso
-import axios from 'axios'
+// 引入myaxiso
+import Myaxios from '@/assets/js/myaxios';
 
-// 把axios挂载到vue实例对象的属性里
-Vue.prototype.$http = axios
+Vue.use(Myaxios)
+
+
+
 Vue.use(ElementUi)
 
 Vue.config.productionTip = false

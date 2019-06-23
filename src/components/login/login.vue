@@ -62,7 +62,7 @@ export default {
         if (valid) {
           // 调用接口
           this.$http({
-            url: "http://localhost:8888/api/private/v1/login",
+            url: "login",
             method: "post",
             data: this.userObj
           }).then(res => {
