@@ -80,10 +80,10 @@ export default {
                   message: meta.msg,
                   type: "success"
                 });
-                // 跳转路由
-                this.$router.push("/");
                 // 把token存到浏览器中
                 window.localStorage.setItem("token", data.token);
+                // 跳转路由
+                this.$router.push("/home");
               }, 500);
               // 登陆失败
             } else {

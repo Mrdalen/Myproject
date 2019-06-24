@@ -15,12 +15,11 @@ import Rights from '../components/rightsList/rightslist.vue'
 
 
 Vue.use(Router)
-
-export default new Router({
+const router = new Router({
   routes: [
-    {
-      path: '/', redirect: '/home'
-    },
+    // {
+    //   path: '/', redirect: '/home'
+    // },
     // 登陆路由
     {
       path: '/login',
@@ -35,13 +34,38 @@ export default new Router({
       // 子路由
       children: [
         // 用户列表
-        { path: '/users', component: Users },
+        { path: '/users', name: 'users', component: Users },
         { path: '/', name: 'index', component: Index },
         // 角色列表
-        { path: '/roles', component: Roles },
+        { path: '/roles', name: 'roles', component: Roles },
         // 权限列表
-        { path: '/rights', component: Rights }
+        { path: '/rights', name: 'rights', component: Rights }
       ]
     }
   ]
 })
+// 当路由发生变化时执行的代码     
+router.beforeEach(function (to, from, next) {
+  // 判断请求的是不是login
+  if (to.name !== 'login') {
+
+    //获取
+    let token = window.localStorage.getItem("token");
+
+    if (!token) {
+      // 弹出警告信息
+      router.push('/login')
+      console.log('不行？');
+    } else {
+      next()
+    }
+  } else {
+
+    next()
+  }
+
+
+
+})
+
+export default router

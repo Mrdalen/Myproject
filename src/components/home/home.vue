@@ -31,16 +31,16 @@ export default {
   mounted() {
     // console.log();
     // 判断是否登陆
-    let token = window.localStorage.getItem("token");
-    if (!token) {
-      // 弹出警告信息
-      this.$message({
-        message: "您还没有登陆哦！",
-        type: "warning"
-      });
-      // 并跳回登陆页面
-      this.$router.push({ name: "login" });
-    }
+    // let token = window.localStorage.getItem("token");
+    // if (!token) {
+    //   // 弹出警告信息
+    //   this.$message({
+    //     message: "您还没有登陆哦！",
+    //     type: "warning"
+    //   });
+    //   // 并跳回登陆页面
+    //   this.$router.push({ name: "login" });
+    // }
   }
 };
 </script>
