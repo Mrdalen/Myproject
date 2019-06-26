@@ -12,10 +12,12 @@ import Index from '@/components/index/index.vue'
 import Roles from '../components/rolelist/roleList.vue'
 // 导入Rights
 import Rights from '../components/rightsList/rightslist.vue'
+// 导入CateGories
+import CateGories from '../components/categories/categories.vue'
 // 引入element 消息提示插件
 import { Message } from 'element-ui'
 
-
+// 使用路由
 Vue.use(Router)
 const router = new Router({
   routes: [
@@ -41,7 +43,9 @@ const router = new Router({
         // 角色列表
         { path: '/roles', name: 'roles', component: Roles },
         // 权限列表
-        { path: '/rights', name: 'rights', component: Rights }
+        { path: '/rights', name: 'rights', component: Rights },
+        // 商品分类
+        { path: '/categories', name: 'categories', component: CateGories }
       ]
     }
   ]
