@@ -12,6 +12,8 @@ import Index from '@/components/index/index.vue'
 import Roles from '../components/rolelist/roleList.vue'
 // 导入Rights
 import Rights from '../components/rightsList/rightslist.vue'
+// 引入element 消息提示插件
+import { Message } from 'element-ui'
 
 
 Vue.use(Router)
@@ -54,8 +56,8 @@ router.beforeEach(function (to, from, next) {
 
     if (!token) {
       // 弹出警告信息
+      Message('您还没有登陆哦！')
       router.push('/login')
-      console.log('不行？');
     } else {
       next()
     }
