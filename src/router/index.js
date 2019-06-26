@@ -17,9 +17,9 @@ import Rights from '../components/rightsList/rightslist.vue'
 Vue.use(Router)
 const router = new Router({
   routes: [
-    // {
-    //   path: '/', redirect: '/home'
-    // },
+    {
+      path: '/', redirect: '/home'
+    },
     // 登陆路由
     {
       path: '/login',
