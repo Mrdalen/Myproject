@@ -25,7 +25,8 @@
         <template slot-scope="scope">{{scope.row.cat_deleted?'有效':'无效'}}</template>
       </el-table-column>
       <el-table-column label="操作">
-        <template slot-scope="scope">
+        <!-- slot-scope="scope" 指的是当前行的数据 -->
+        <template>
           <el-button type="primary" icon="el-icon-edit" plain size="mini"></el-button>
           <el-button type="danger" icon="el-icon-delete" plain size="mini"></el-button>
         </template>
@@ -207,7 +208,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .mybtn {
   margin-top: 20px;
 }

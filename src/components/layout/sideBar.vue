@@ -1,80 +1,51 @@
 <template>
   <!-- 菜单栏 -->
-  <el-menu class="el-menu-vertical-demo mymenu" :unique-opened="true" :router="true">
-    <!-- 子菜单/菜单选项  index：当前选项的标识 （跳转路径）-->
-    <el-submenu index="1">
-      <!-- 菜单选项的内容 title表示为标题 -->
+  <el-menu :router="true" :unique-opened="true" class="el-menu-vertical-demo mymenu">
+    <el-submenu v-for="item in rightsList" :key="item.id" :index="item.path">
       <template slot="title">
         <i class="el-icon-location"></i>
-        <span>用户管理</span>
+        <span>{{item.authName}}</span>
       </template>
-      <el-menu-item index="/users">
-        <i class="el-icon-menu"></i>
-        <span>用户列表</span>
-      </el-menu-item>
-    </el-submenu>
-    <el-submenu index="2">
-      <!-- 菜单选项的内容 title表示为标题 -->
-      <template slot="title">
-        <i class="el-icon-location"></i>
-        <span>权限管理</span>
-      </template>
-      <el-menu-item index="/roles">
-        <i class="el-icon-menu"></i>
-        <span>角色列表</span>
-      </el-menu-item>
-      <el-menu-item index="/rights">
-        <i class="el-icon-menu"></i>
-        <span>权限列表</span>
-      </el-menu-item>
-    </el-submenu>
-    <el-submenu index="3">
-      <!-- 菜单选项的内容 title表示为标题 -->
-      <template slot="title">
-        <i class="el-icon-location"></i>
-        <span>商品管理</span>
-      </template>
-      <el-menu-item index="3-1">
-        <i class="el-icon-menu"></i>
-        <span>商品列表</span>
-      </el-menu-item>
-      <el-menu-item index="3-2">
-        <i class="el-icon-menu"></i>
-        <span>分类列表</span>
-      </el-menu-item>
-      <el-menu-item index="/categories">
-        <i class="el-icon-menu"></i>
-        <span>商品分类</span>
-      </el-menu-item>
-    </el-submenu>
-    <el-submenu index="4">
-      <!-- 菜单选项的内容 title表示为标题 -->
-      <template slot="title">
-        <i class="el-icon-location"></i>
-        <span>订单管理</span>
-      </template>
-      <el-menu-item index="4-1">
-        <i class="el-icon-menu"></i>
-        <span>订单列表</span>
-      </el-menu-item>
-    </el-submenu>
-    <el-submenu index="5">
-      <!-- 菜单选项的内容 title表示为标题 -->
-      <template slot="title">
-        <i class="el-icon-location"></i>
-        <span>数据统计</span>
-      </template>
-      <el-menu-item index="5-1">
-        <i class="el-icon-menu"></i>
-        <span>数据报表</span>
+      <el-menu-item v-for="son in item.children" :key="son.id" :index="son.path">
+        <template>
+          <i class="el-icon-menu"></i>
+          {{son.authName}}
+        </template>
       </el-menu-item>
     </el-submenu>
   </el-menu>
 </template>
 
+
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      rightsList: []
+    };
+  },
+  methods: {
+    // 获取侧边栏权限
+    getmenu() {
+      this.$http({
+        url: "http://localhost:8888/api/private/v1/menus"
+      }).then(res => {
+        // console.log(res);
+        let { data, meta } = res.data;
+        if (meta.status == 200) {
+          this.rightsList = data;
+        }
+      });
+    }
+  },
+  mounted() {
+    this.getmenu();
+  }
+};
 </script>
 
 <style>
+.mymenu {
+  height: 100%;
+}
 </style>

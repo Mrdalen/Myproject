@@ -5,7 +5,7 @@
     <Mybread one="用户管理" two="角色列表"></Mybread>
     <!-- 添加按钮 -->
     <el-row class="myrow">
-      <el-button @click="show=!show">添加角色</el-button>
+      <el-button @click="addRoleDialog=true">添加角色</el-button>
     </el-row>
 
     <!-- 表格 -->
@@ -37,23 +37,23 @@
                 </el-col>
                 <el-col :span="21">
                   <!-- 遍历三级权限并生成 -->
-                  <transition-group name="el-zoom-in-center">
-                    <el-tag
-                      v-show="show"
-                      class="item3"
-                      v-for="(item3,index3) in item2.children"
-                      :key="index3"
-                      closable
-                      type="warning"
-                      @close="getDelete(scope.row,item3.id)"
-                    >
-                      {{item3.id}}
-                      {{item3.authName}}
-                    </el-tag>
-                  </transition-group>
+                  <el-tag
+                    class="item3"
+                    v-for="(item3,index3) in item2.children"
+                    :key="index3"
+                    closable
+                    type="warning"
+                    @close="getDelete(scope.row,item3.id)"
+                  >
+                    {{item3.id}}
+                    {{item3.authName}}
+                  </el-tag>
                 </el-col>
               </el-row>
             </el-col>
+          </el-row>
+          <el-row v-if="scope.row.children.length===0">
+            <el-col :span="24">没有分配权限</el-col>
           </el-row>
         </template>
       </el-table-column>
@@ -94,6 +94,22 @@
         <el-button type="primary" @click="setRightFn">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- 新增角色 -->
+    <el-dialog title="新增角色" :visible.sync="addRoleDialog">
+      <el-form :model="addRoleForm">
+        <el-form-item label="角色名">
+          <el-input v-model="addRoleForm.roleName" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="角色描述">
+          <el-input v-model="addRoleForm.roleDesc" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addRoleDialog = false">取 消</el-button>
+        <el-button type="success" @click="addRoles">新 增</el-button>
+      </div>
+    </el-dialog>
   </el-card>
 </template>
 
@@ -106,7 +122,6 @@ export default {
     return {
       // 存储的表格数据
       rouleList: [],
-      show: true,
       rouledialog: false,
       // 分配权限数据列表
       data: [],
@@ -118,7 +133,14 @@ export default {
       // 默认选中项
       defaultChecked: [],
       // 存储要修改的角色id
-      rouleId: 0
+      rouleId: 0,
+      // 新增角色弹框
+      addRoleDialog: false,
+      // 新增角色的表单数据
+      addRoleForm: {
+        roleName: "",
+        roleDesc: ""
+      }
     };
   },
   // 注册为组件
@@ -226,6 +248,25 @@ export default {
           this.$message.success(meta.msg);
           // 关闭弹出框
           this.rouledialog = false;
+        }
+      });
+    },
+    // 新增角色
+    addRoles() {
+      this.$http({
+        method: "POST",
+        url: "roles",
+        data: {
+          roleName: this.addRoleForm.roleName,
+          roleDesc: this.addRoleForm.roleDesc
+        }
+      }).then(res => {
+        if (res.data.meta.status == 201) {
+          this.$message.success(res.data.meta.msg);
+          this.getRoleList();
+          this.addRoleDialog = false;
+        } else {
+          this.$message.error(res.data.meta.msg);
         }
       });
     }

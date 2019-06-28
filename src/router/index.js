@@ -14,6 +14,10 @@ import Roles from '../components/rolelist/roleList.vue'
 import Rights from '../components/rightsList/rightslist.vue'
 // 导入CateGories
 import CateGories from '../components/categories/categories.vue'
+// 引入Goods
+import Goods from '../components/goods/goods.vue'
+// 引入GoodsAdd
+import GoodsAdd from "../components/goodsAdd/goodsAdd.vue"
 // 引入element 消息提示插件
 import { Message } from 'element-ui'
 
@@ -45,7 +49,11 @@ const router = new Router({
         // 权限列表
         { path: '/rights', name: 'rights', component: Rights },
         // 商品分类
-        { path: '/categories', name: 'categories', component: CateGories }
+        { path: '/categories', name: 'categories', component: CateGories },
+        // 商品列表
+        { path: '/goods', name: 'goods', component: Goods },
+        // 商品新增页
+        { path: '/goodsAdd', name: 'goodsAdd', component: GoodsAdd }
       ]
     }
   ]
